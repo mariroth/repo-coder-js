@@ -1,0 +1,76 @@
+
+body {
+    font-family: Arial, sans-serif; 
+    margin: 20px; 
+}
+
+h1, h2 { 
+    margin-bottom: 15px;
+    text-align: center;
+}
+
+#lista-productos { 
+    display: grid; 
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); 
+    gap: 12px; margin-bottom: 16px; }
+
+.prod { 
+    border: 1px solid #737272; 
+    padding: 10px; 
+    border-radius: 6px; 
+}
+.prod h3 { 
+    margin: 0 0 6px 0; 
+    font-size: 16px; 
+}
+
+.prod .precio { 
+    margin-bottom: 8px; 
+    color: #333; 
+}
+.row { 
+    display: flex; 
+    align-items: center; 
+    gap: 8px; 
+}
+.row input[type="number"] { 
+    width: 70px; 
+    padding: 4px;
+}
+.subprod { 
+    margin-top: 6px; 
+    font-size: 14px; 
+    color: #222; 
+}
+
+#resumen {
+    background: rgb(174, 173, 173);
+    width: 30%;
+    margin: 20px auto;
+    padding: 20px;
+    border-radius: 8px;
+    text-align: center; 
+}
+
+#resumen p {
+    text-align: left;
+}
+
+#resumen strong {
+    min-width: 80px; 
+    display: inline-block; 
+}
+
+#r-desc-pct {
+    color: #414241; 
+    margin-left: 1px;
+    font-size: 14px;
+}
+
+#btn-confirmar {
+    margin-top: 15px;
+    padding: 8px 16px;
+    font-size: 16px;
+    cursor: pointer;
+    background: #c5f0ee;
+}
