@@ -1,112 +1,87 @@
-const IVA = 0.21;
 const catalogo = [
     { id: 1, nombre: 'Malbec Reserva', precio: 8500 },
     { id: 2, nombre: 'Cabernet Sauvignon', precio: 9200 },
     { id: 3, nombre: 'Chardonnay', precio: 7800 },
     { id: 4, nombre: 'Rosé', precio: 6500 },
-    { id: 5, nombre: 'Pinot Noir', precio: 6500 },
-    { id: 6, nombre: 'Sauvignon Blanc', precio: 6760 },
-    { id: 7, nombre: 'Merlot', precio: 7500 },
-    { id: 8, nombre: 'Cabernet Franc', precio: 11500 },
-    { id: 9, nombre: 'Syrah', precio: 4568 },
-    { id: 10, nombre: 'Bonarda', precio: 4568 },
+    { id: 5, nombre: 'Pinot Noir', precio: 6500 }
 ];
 
-const cantidades = {};
-
-function descuentoPorTramo(subtotal) {
-    if (subtotal > 70000) return 0.15;
-    if (subtotal > 50000) return 0.10;
-    if (subtotal > 30000) return 0.05;
-    return 0;
+function mostrarCatalogo (lista) {
+    let catalogo = '=== Catálogo de vinos ===\n\n';
+    for (let i = 0; i < lista.length; i++) {
+        const producto = lista[i];
+        catalogo += `${producto.id}. ${producto.nombre} - $${producto.precio}\n`;
+    } 
+    const entrada = prompt(
+        `${catalogo}\n Ingresá el número del vino (1 a ${lista.length}).\n O presioná "Cancelar" para salir.`
+    );
+    if (entrada === null) return null;return Number(entrada.trim());         
 }
 
-function actualizarResumen() {
-    let subtotal = 0;
-    for (const prod of catalogo) {
-    const cant = cantidades[prod.id] || 0;
-    subtotal = subtotal + (prod.precio * cant);
+function buscarProductoPorId(lista, idBuscado) {
+    for (let i = 0; i < lista.length; i++) {
+        const p = lista[i];
+        if (p.id === idBuscado) {
+            return p
+        }
     }
-
-    const descPct = descuentoPorTramo(subtotal);
-    const descMonto = subtotal * descPct;
-    const neto = subtotal - descMonto;
-    const iva = neto * IVA;
-    const total = neto + iva;
-
-
-    document.getElementById('r-subtotal').textContent = `$${subtotal}`;
-    document.getElementById('r-descuento').textContent = `$${descMonto.toFixed(2)}`;
-    document.getElementById('r-desc-pct').textContent = descPct > 0 ? `(${(descPct*100).toFixed(0)}%)` : '';
-    document.getElementById('r-iva').textContent = `$${iva.toFixed(2)}`;
-    document.getElementById('r-total').textContent = `$${total.toFixed(2)}`;
+    return null;               
 }
 
-function renderProductos() {
-    const contenedorProductos = document.getElementById('lista-productos');
-    contenedorProductos.innerHTML = '';
-
-    catalogo.forEach((prod) => {
-    const div = document.createElement('div');
-    div.className = 'prod';
-    cantidades[prod.id] = 0;
-
-    div.innerHTML = `
-    <h3>${prod.nombre}</h3>
-    <div class="precio">Precio: <strong>$${prod.precio}</strong></div>
-    <div class="row">
-    <label>Cantidad</label>
-    <input type="number" min="0" value="0" />
-    </div>
-    <div class="subprod">
-        Subtotal producto: <strong class="subtotal-texto">$0</strong>
-    </div>
-    `;
-
-    const input = div.querySelector('input');               
-    const elementoSubtotal = div.querySelector('.subtotal-texto');
-
-    input.addEventListener('input', () => {
-        const cant = parseInt(input.value, 10);
-        const cantidadValida = isNaN(cant) || cant < 0 ? 0 : cant;
-        cantidades[prod.id] = cantidadValida;
-        const subProd = prod.precio * cantidadValida;
-        elementoSubtotal.textContent = `$${subProd}`;
-        actualizarResumen();
-    });
-
-    contenedorProductos.appendChild(div);
-});
+function calcularSubtotal(precioUnitario, cantidad) {
+    return precioUnitario * cantidad;    
 }
 
 
-document.addEventListener('DOMContentLoaded', () => {
-    renderProductos();
-    actualizarResumen();
-    
-    const btnConfirmar = document.getElementById('btn-confirmar');
-    if (btnConfirmar) {
-    btnConfirmar.addEventListener('click', confirmarCompra);
-}
-});
-
-function confirmarCompra() {
-    let subtotal = 0;
-    for (const prod of catalogo) {
-    const cant = cantidades[prod.id] || 0;
-    subtotal += prod.precio * cant;
+function pedirCantidad(nombreProducto) {
+    const entrada = prompt(`¿Cuántas unidades de "${nombreProducto}"?`);
+    if (entrada === null){
+        return null;
+    }
+    const n = Number(entrada.trim());
+    if (!Number.isInteger(n) || n <= 0) {
+        return null;
+    } else {return n;
+    }
 }
 
-if (subtotal === 0) {
-    alert('No agregaste productos.');
-    return;
+const quiereComprar = confirm('¿Querés ver el catálogo y elegir un vino?');
+
+if (!quiereComprar) {
+    alert('¡Gracias igual! Volvé, cuando quieras!');
+} else {
+    let seguir = true
+    while(seguir){
+        const id = mostrarCatalogo(catalogo);
+        if (id === null) {
+            alert('Operación cancelada. ¡Hasta la próxima!')
+            seguir = false
+        } else if (!Number.isInteger(id) || id < 1 || id > catalogo.length){
+            alert('ID inválido. Debe ser un entero entre 1 y ' + catalogo.length );
+        } else {
+            const producto = buscarProductoPorId(catalogo, id);
+            const cantidad = pedirCantidad(producto.nombre);
+            if (cantidad === null) {
+                alert('Cantidad cancelada.');
+            } else {
+                const subtotal = calcularSubtotal(producto.precio, cantidad);
+                const ok = confirm(
+                    `¿Confirmás la compra?\n\n` +
+                    `Producto: ${producto.nombre}\n` +
+                    `Precio unitario: $${producto.precio}\n` +
+                    `Cantidad: ${cantidad}\n` +
+                    `Subtotal: $${subtotal}`
+                );
+                if(ok){
+                    alert('¡Compra confirmada! Gracias por tu pedido.');
+                    seguir = confirm('¿Querés comprar otro producto?');
+                } else {
+                    alert('Operación cancelada.');
+                    seguir = false;
+                }
+
+            }
+        }
+
+    }
 }
-
-const ok = confirm('¿Confirmás la compra?' );
-if (!ok) return;
-
-alert('🎉 ¡Gracias por tu compra!');
-renderProductos();
-actualizarResumen();
-}
-
