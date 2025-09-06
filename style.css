@@ -1,0 +1,216 @@
+
+*{
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:root{
+  --bg:       #1b2230;   
+  --card:     #252c3d;  
+  --cart-bg:  #223049;  
+  --text:     #f5f7fb;
+  --muted:    #b8bcc7;
+  --brand:    #8b5cf6;   
+  --brand-hover: #9d6ff8; 
+  --brand-2:  #34d399;   
+  --danger:   #ef4444;
+  --danger-hover: #f87171;
+  --border:   #3a4566;
+  --radius:   14px;
+}
+
+body{
+  font-family: 'Segoe UI', Roboto, Arial, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.45;
+  font-size: 0.9rem;
+}
+
+h1, h2, h3{ font-weight: 600; line-height: 1.3; }
+h1{
+  font-size: 2.1rem;       
+  margin-bottom: 10px;      
+  text-align: center;
+}
+h2{ font-size: 1.2rem; margin-bottom: 6px; }
+h3{ font-size: 1rem;  margin-bottom: 4px; }
+
+.container{ width: min(1100px, 92vw); margin: 24px auto; }
+
+header.container p{
+  margin: 4px 0 14px;      
+  color: var(--muted);
+}
+
+input, select{
+  background: var(--card);
+  border: 1px solid var(--border);
+  color: var(--text);
+  padding: 6px 10px;
+  border-radius: 8px;
+  font-size: 0.9rem;
+}
+input:focus,
+select:focus{
+  outline: none;
+  border-color: #2dd4bf;
+  box-shadow: 0 0 0 2px rgba(45,212,191,.18);
+}
+
+.toolbar{
+  display: flex;
+  gap: 12px;
+}
+
+.layout{
+  display: grid;
+  grid-template-columns: 1fr 320px;
+  gap: 24px;
+  align-items: start;
+}
+
+/* Catalogo */
+
+.grid{
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+  gap: 16px;
+}
+
+.card{
+  background: var(--card);
+  border: 1px solid var(--border);
+  padding: 12px;
+  border-radius: var(--radius);
+  display: grid;
+  gap: 6px;
+  transition: border-color .12s ease;
+}
+.card:hover{ border-color: #4a5680; }
+
+.card h3{
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+.price, .precio{
+  font-weight: 600;
+  color: var(--brand-2);
+  font-size: 0.9rem;
+}
+.card img{
+  display: block;
+  max-width: 100%;
+  height: 150px;
+  object-fit: cover;
+  border-radius: 8px;
+  margin: 0 auto 6px;
+}
+.muted{ color: var(--muted); }
+
+/* Botones */
+
+button{
+  cursor: pointer;
+  border: none;
+  border-radius: 8px;
+  padding: 6px 12px;
+  background: var(--brand);
+  color: #fff;
+  font-weight: 500;
+  font-size: 0.85rem;
+  transition: background-color .15s ease; 
+}
+
+button:hover{ background: var(--brand-hover); }
+button:disabled{ opacity: .6; cursor: not-allowed; }
+
+button.secondary{ background: #3a3f50; }
+button.secondary:hover{ background: #4d5366; }
+
+button.danger{ background: var(--danger); }
+button.danger:hover{ background: var(--danger-hover); }
+
+/* Carrito Compras */
+
+.cart{
+  position: sticky;
+  top: 70px;
+  margin-top: 30px;
+  margin-left: 20px;
+  background: var(--cart-bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 12px 12px 14px;
+  display: grid;
+  gap: 10px;
+}
+
+.cart > h2{
+  text-align: center;
+  margin: 2px 0 6px;
+}
+
+#cartItems{
+  margin-top: 2px;
+  padding-right: 2px;
+}
+
+.cart-item{
+  display: grid;
+  grid-template-columns: 1fr auto auto;
+  column-gap: 8px;
+  align-items: center;
+  padding: 6px 0;
+  border-bottom: 1px dashed var(--border);
+  font-size: 0.8rem;
+}
+.cart-item:last-child{ border-bottom: none; }
+
+.cart-item .name{ line-height: 1.3; }
+.cart-item .cantidad{
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 120px;
+}
+
+.cart-item input[type="number"]{
+  width: 48px;
+  padding: 4px;
+  text-align: center;
+  font-size: 0.8rem;
+  border-radius: 6px;
+  background: #1f2740;
+  border: 1px solid var(--border);
+  color: var(--text);
+}
+
+.cart-item .subtotal{
+  text-align: right;
+  white-space: nowrap;
+  font-weight: 500;
+  font-size: 0.8rem;
+  color: #e6ebff;
+}
+
+.cart-summary{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-weight: 600;
+  font-size: 0.9rem;
+  margin-top: 8px;
+  padding: 8px 0;
+  border-top: 1px solid var(--border);
+}
+
+.cart form{
+  display: grid;
+  gap: 8px;
+  padding: 0 4px;
+  margin-top: 6px;
+}
+.cart form label{ display: grid; gap: 4px; font-size: 0.85rem; }
+.cart form input{ width: 100%; }

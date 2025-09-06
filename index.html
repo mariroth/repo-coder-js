@@ -1,15 +1,55 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script src="script.js" defer></script>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>Vinoteca Online</title>
+    <link rel="stylesheet" href="style.css" />
+    <script src="script.js" defer></script>
 </head>
 <body>
-    <h1>Simulador Compra Online</h1>
-    <p>
-        Por favor, elegi el producto que queres comprar y confirma tu pedido
-    </p>
+    <header class="container">
+        <h1>Vinoteca Online</h1>
+        <p>Elegí tus vinos, agregalos al carrito y finalizá tu compra.</p>
+        
+        <div class="toolbar">
+            <input id="buscador" type="search" placeholder="Buscar por nombre" />
+            <select id="orden">
+                <option value="none">Ordenar</option>
+                <option value="precio-asc">Precio: menor a mayor</option>
+                <option value="precio-desc">Precio: mayor a menor</option>
+                <option value="nombre-asc">Nombre A-Z</option>
+                <option value="nombre-desc">Nombre Z-A</option>
+            </select>
+        </div>
+    </header>
+    
+    <main class="container layout">
+        <section>
+            <h2>Catálogo</h2>
+            <div id="catalogo" class="grid"></div>
+            <p id="catalogoVacio" class="muted" hidden>No se encontraron productos con ese criterio.</p>
+        </section>
+        
+        <section class="cart">
+            <h2>Detalle de compra</h2>
+            <div id="cartItems"></div>
+            <div class="cart-summary">
+                <p><strong>Total:</strong> <span id="cartTotal">$0</span></p>
+                <button id="btnVaciar" class="secondary">Vaciar carrito</button>
+            </div>
+            
+            <form id="checkoutForm">
+                <h3>Finalizar compra</h3>
+                <label> Nombre y Apellido <input id="nombre" name="nombre" required /> </label>
+                <label> Email <input id="email" name="email" type="email" required /> </label>
+                <label> Dirección (calle,numero,dto)<input id="direccion" name="direccion" required /> </label>
+                <button type="submit" class="primary" id="btnFinalizar" disabled>
+                    Confirmar compra
+                </button>
+            </form>
+        </section>
+    </main>
+
 </body>
 </html>
