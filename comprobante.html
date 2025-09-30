@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<title>Comprobante</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<style>
+:root{ --ink:#111; --muted:#666; }
+body{ font-family: Arial, sans-serif; color:var(--ink); margin:16mm; }
+h1{ font-size:18px; margin:0 0 10px; }
+.box{ background:#f7f7f7; border:1px solid #ddd; padding:8px; margin:8px 0 12px; }
+.sub{ font-size:12px; color:var(--muted); margin-top:2px; }
+
+table{ width:100%; border-collapse:collapse; font-size:14px; }
+th, td{ padding:6px 8px; border-bottom:1px solid #eee; }
+th{ border-bottom:2px solid #333; text-align:left; }
+td.c{ text-align:center; }
+td.r{ text-align:right; }
+tfoot td{ border-bottom:none; }
+
+@media print{
+    thead{ display: table-header-group; }
+    tfoot{ display: table-row-group; }
+    tr, td, th{ break-inside: avoid; page-break-inside: avoid; }
+}
+</style>
+</head>
+<body>
+    <h1>Comprobante de compra</h1>
+    <div id="totalBox" class="box"></div>
+    <div id="cliente"></div>
+    <div id="mail"></div>
+    <div id="direccion"></div>
+    
+    <h2 style="font-size:16px; margin:16px 0 8px;">Productos</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Producto</th>
+                <th class="c">Cant.</th>
+                <th class="r">Subtotal</th>
+            </tr>
+        </thead>
+        <tbody id="tbody"></tbody>
+        <tfoot>
+            <tr>
+                <td></td>
+                <td class="r"><b>Total</b></td>
+                <td id="totalFinal" class="r"></td>
+            </tr>
+        </tfoot>
+    </table>
+    
+    <div id="fecha" class="sub" style="margin-top:12px;"></div>
+
+<script>
+(function(){
+    const raw = sessionStorage.getItem('comp-payload');
+    if (!raw) {
+        document.body.innerHTML = '<p>No hay datos para imprimir.</p>';
+        return;
+    }
+    const data = JSON.parse(raw);
+    sessionStorage.removeItem('comp-payload');
+    const dinero = n => new Intl.NumberFormat('es-AR', { style:'currency', currency:'ARS' }).format(n || 0);
+    
+    document.getElementById('totalBox').innerHTML  = '<b>Total a pagar:</b> ' + dinero(data.total);
+    document.getElementById('cliente').innerHTML   = '<b>Cliente:</b> ' + (data.nombre || '-');
+    document.getElementById('mail').innerHTML      = '<b>Mail:</b> ' + (data.mail || '-');
+    document.getElementById('direccion').innerHTML = '<b>Dirección:</b> ' + (data.direccion || '-');
+
+
+    const tbody = document.getElementById('tbody');
+    tbody.innerHTML = (data.items || []).map(e => {
+        const nom = e.nombre + (e.cepa ? ' ' + e.cepa : '');
+        const sub = (e.precio || 0) * (e.cantidad || 0);
+        return `
+        <tr>
+            <td>${nom}</td>
+            <td class="c">${e.cantidad || 0}</td>
+            <td class="r">${dinero(sub)}</td>
+        </tr>
+    `;
+}).join('');
+
+document.getElementById('totalFinal').textContent = dinero(data.total);
+document.getElementById('fecha').textContent      = 'Fecha: ' + new Date().toLocaleString();
+
+
+window.addEventListener('load', () => {
+    window.print();
+    setTimeout(() => window.close(), 300);
+});
+})();
+</script>
+</body>
+</html>

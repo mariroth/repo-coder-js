@@ -109,6 +109,10 @@ select:focus{
 }
 .muted{ color: var(--muted); }
 
+#catalogoLoading{
+  margin: 8px 0 4px;
+}
+
 /* Botones */
 
 button{
@@ -214,3 +218,22 @@ button.danger:hover{ background: var(--danger-hover); }
 }
 .cart form label{ display: grid; gap: 4px; font-size: 0.85rem; }
 .cart form input{ width: 100%; }
+
+/* notificaciones */
+
+.toast-ok{
+  background: linear-gradient(90deg, var(--brand), var(--brand-hover)) !important;
+  color:#fff !important;
+  border-radius:10px !important;
+}
+.toast-warn{
+  background:#fb4949 !important; 
+  color:#fff !important;
+  border-radius:10px !important;
+}
+
+.toast-info{
+  background:#3b82f6 !important;
+  color:#fff !important;
+  border-radius:10px !important;
+}

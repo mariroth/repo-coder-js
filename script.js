@@ -1,80 +1,7 @@
-const catalogo = [
-    { 
-        id: 1, 
-        nombre: "Alambrado", 
-        cepa: "Malbec Reserva", 
-        viñedo: "Las Perdices", 
-        precio: 8500,  
-        stock: true, 
-        imagen: "/img/alambradoMalbec.png" 
-    },
-    { 
-        id: 2, 
-        nombre: "Norton Select", 
-        cepa: "Cabernet Sauvignon",
-        viñedo: "Bodega Norton", 
-        precio: 11500, 
-        stock: true, 
-        imagen: "/img/nortonSelectCavernetSauvignon.png" 
-    },
-    { 
-        id: 3, 
-        nombre: "Paula", 
-        cepa: "Chardonay", 
-        viñedo: "Doña Paula", 
-        precio: 8500,  
-        stock: true, 
-        imagen: "/img/paulaChardonnay.png" 
-    },
-    { 
-        id: 4, 
-        nombre: "Emilia", 
-        cepa: "Rosé", 
-        viñedo: "Nieto Senetiner", 
-        precio: 8500,  
-        stock: true, 
-        imagen: "/img/emilia_Rose.png" 
-    },
-    { 
-        id: 5, 
-        nombre: "Nieto Senetiner", 
-        cepa: "Pinot Noir", 
-        viñedo: "Nieto Senetiner",
-        precio: 11500, 
-        stock: true, 
-        imagen: "/img/nietoSenetinerPinotNoir.png" 
-    },
-    { 
-        id: 6, 
-        nombre: "Ala Colorada", 
-        cepa: "Cabernet Franc", 
-        viñedo: "Las Perdices", 
-        precio: 11500, 
-        stock: false, 
-        imagen: "/img/alaColoradaCabernetFranc.png" 
-    },
-    { 
-        id: 7, 
-        nombre: "Alaris", 
-        cepa: "Cabernet Sauvignon Blanco", 
-        viñedo: "Trapiche", 
-        precio: 10500, 
-        stock: true, 
-        imagen: "/img/alarisCabernetBlanco.png" 
-    },
-    { 
-        id: 8, 
-        nombre: "Los Cardps", 
-        cepa: "Cabernet Sauvignon Blanco", 
-        viñedo: "Doña Paula", 
-        precio: 9900,  
-        stock: true,
-        imagen: "/img/losCardosDoñaPaula.png" 
-    }
-];
-
-
 const claveStorage = "carritoV1";
+const fmt = new Intl.NumberFormat("es-AR", { style: "currency", currency: "ARS" });
+
+let catalogo = [];
 let carrito = leerCarrito(); 
 
 function leerCarrito() {
@@ -90,8 +17,50 @@ function guardarCarrito() {
     localStorage.setItem(claveStorage, JSON.stringify(carrito));
 }
 
+// 
+function toast(msg, variant = "ok") {
+    Toastify({
+        text: msg,
+        duration: 2200,
+        gravity: "top",
+        position: "right",
+        close: true,
+        className: `toast-${variant}` 
+    }).showToast();
+}
+
+function dinero(n) {
+  return fmt.format(n);
+}
+
 
 // Catalogo 
+
+async function cargarCatalogo() {
+    try {
+        const resp = await fetch("productos.json");
+        if (!resp.ok) throw new Error("No se pudo cargar el catálogo");
+        const data = await resp.json();
+        catalogo = data;
+        renderCatalogo(catalogo);
+    } catch (err) {
+        console.error(err);
+        Swal.fire({
+            icon: "error",
+            title: "Error",
+            text: "No pudimos cargar el catálogo. Probá recargar o revisar el servidor local.",
+            background: "#223049",
+            color:      "#f5f7fb",
+            iconColor:  "#ef4444",
+            confirmButtonColor: "#8b5cf6",
+            confirmButtonText: "Entendido",
+            allowOutsideClick: false,
+            width: "32rem"
+        });
+    } finally {
+        if (loading) loading.remove();
+    }
+}
 
 function crearCard(prod) {
     const card = document.createElement("article");
@@ -111,7 +80,7 @@ function crearCard(prod) {
 
     const precio = document.createElement("p");
     precio.className = "precio";  
-    precio.textContent = "$ " + prod.precio;
+    precio.textContent = dinero(prod.precio);
 
     const btn = document.createElement("button");
     btn.type = "button";
@@ -120,6 +89,7 @@ function crearCard(prod) {
         btn.textContent = "Agregar al carrito";
         btn.addEventListener("click", function () {
             agregarAlCarrito(prod.id);
+            toast("Producto agregado al carrito", "ok");
         });
     } else {
         btn.textContent = "Sin stock";
@@ -131,7 +101,6 @@ function crearCard(prod) {
     card.appendChild(bodega);
     card.appendChild(precio);
     card.appendChild(btn);
-
     return card;
 }
 
@@ -140,12 +109,10 @@ function renderCatalogo(lista) {
     const cartelVacio = document.querySelector("#catalogoVacio");
 
     contCatalogo.innerHTML = "";
-
     if (!lista || lista.length === 0) {
         cartelVacio.hidden = false;
         return;
     }
-
     cartelVacio.hidden = true;
     lista.forEach(function (prod) {
         contCatalogo.appendChild(crearCard(prod));
@@ -156,8 +123,8 @@ function renderCatalogo(lista) {
 // Carrito
 
 function agregarAlCarrito(id) {
-    let item = carrito.find(function (elemento) {
-        return elemento.id === id;
+    let item = carrito.find(function (e) {
+        return e.id === id;
     });
     
     if (item) {
@@ -188,6 +155,7 @@ function quitarDelCarrito(id) {
     });
     guardarCarrito();
     renderCarrito();
+    toast("Producto eliminado", "warn");
 }
 
 
@@ -203,12 +171,14 @@ function cambiarCantidad(id, nuevaCantidad) {
     item.cantidad = nuevaCantidad;
     guardarCarrito();
     renderCarrito();
+    toast("Cantidad actualizada", "info");
 }
 
 function vaciarCarrito() {
     carrito = [];
     guardarCarrito();
     renderCarrito();
+    toast("Carrito vacío");
 }
 
 function totalCarrito() {
@@ -226,7 +196,7 @@ function renderCarrito() {
     
     if (carrito.length === 0) {
         contCartItems.innerHTML = '<p class="muted">Tu carrito está vacío.</p>';
-        cartTotalLabel.textContent = "$ " + totalCarrito();
+        cartTotalLabel.textContent = dinero(totalCarrito());
         btnFinalizar.disabled = true;
         return;
     }
@@ -266,7 +236,7 @@ function renderCarrito() {
 
     const subtotal = document.createElement("div");
     subtotal.className = "subtotal";
-    subtotal.textContent = "$ " + (elemento.precio * elemento.cantidad);
+    subtotal.textContent = dinero(elemento.precio * elemento.cantidad);
 
     fila.appendChild(nombre);
     fila.appendChild(controles);
@@ -275,7 +245,7 @@ function renderCarrito() {
     contCartItems.appendChild(fila);
 });
 
-cartTotalLabel.textContent = "$ " + totalCarrito();
+cartTotalLabel.textContent = dinero(totalCarrito());
 btnFinalizar.disabled = false;
 }
 
@@ -305,35 +275,80 @@ function aplicarFiltros() {
             lista.sort(function (a, b) { return b.nombre.localeCompare(a.nombre); });
             break;
     }
-
     renderCatalogo(lista);
+}
+
+// plantilla de comprobante
+
+function abrirComprobanteEnNuevaPestaña({nombre, mail, direccion, items, total }) {
+    const payload = { nombre, mail, direccion, items, total };
+    sessionStorage.setItem('comp-payload', JSON.stringify(payload));
+    window.open('comprobante.html', '_blank');
 }
 
 // confirmar compra
 
-function confirmarCompra() {
-    if (carrito.length === 0) return;
+async function confirmarCompra(e) {
+    e.preventDefault();
+    if (carrito.length === 0) {
+        await Swal.fire({
+            icon:"info",
+            title:"Tu carrito está vacío",
+            showConfirmButton:false,
+            timer:1400
+        });
+        return;
+    }
+
+    const form = document.querySelector("#checkoutForm");
+    if (!form.reportValidity()) return;
+    const datos = new FormData(form);
+    const nombreCliente = datos.get("nombre");
+    const mailCliente = datos.get("mail");
+    const direccionCliente = datos.get("direccion");
+    const total = totalCarrito();
     
-    const datosFormulario = new FormData(document.querySelector("#checkoutForm"));
-    const nombreCliente = datosFormulario.get("nombre");
-    const emailCliente = datosFormulario.get("email");
-    const direccionCliente = datosFormulario.get("direccion");
-    const montoTotal = totalCarrito();
-    
-    alert(
-    "¡Gracias " + nombreCliente + "! " +
-    "Total de la compra: $ " + montoTotal +
-    ". Te enviamos el detalle a: " + emailCliente
-    );
-    
+    const {isConfirmed} = await Swal.fire({
+        title:"Confirmar compra",
+        html: `
+            <p><b>Cliente:</b> ${nombreCliente || "-"}</p>
+            <p><b>Mail:</b> ${mailCliente || "-"}</p>
+            <p><b>Dirección:</b> ${direccionCliente || "-"}</p>
+            <p><b>Total:</b> ${fmt.format(total)}</p>
+            <p>¿Deseás confirmar?</p>
+            `,
+        icon:"question",
+        showCancelButton: true,
+        confirmButtonText:"Sí, comprar",
+        cancelButtonText:"Cancelar"
+    });
+    if (!isConfirmed) return;
+    const res = await Swal.fire({
+        icon:"success",
+        title:"¡Gracias por tu compra!",
+        text:"¿Querés descargar el comprobante?",
+        showCancelButton:true,
+        confirmButtonText:"Descargar PDF",
+        cancelButtonText:"Cerrar"
+    });
+    if (res.isConfirmed) {
+        const itemsSnapshot = carrito.map(x => ({ ...x })); 
+        abrirComprobanteEnNuevaPestaña({
+            nombre: nombreCliente,     
+            mail: mailCliente,
+            direccion: direccionCliente,
+            items: itemsSnapshot,
+            total: total
+        });
+    }
     vaciarCarrito();
-    document.querySelector('#checkoutForm').reset();
+    form.reset();
 }
 
 // inicio
-
-renderCatalogo(catalogo);
 renderCarrito();
+cargarCatalogo();
+
 document.querySelector('#btnVaciar').addEventListener('click', vaciarCarrito);
 document.querySelector('#checkoutForm').addEventListener('submit', confirmarCompra);
 document.querySelector('#buscador').addEventListener('input', aplicarFiltros);
