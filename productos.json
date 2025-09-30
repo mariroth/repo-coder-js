@@ -1,10 +1,10 @@
 [
-  { "id": 1, "nombre": "Alambrado", "cepa": "Malbec Reserva", "viñedo": "Las Perdices", "precio": 8500, "stock": true, "imagen": "/img/alambradoMalbec.png" },
-  { "id": 2, "nombre": "Norton Select", "cepa": "Cabernet Sauvignon", "viñedo": "Bodega Norton", "precio": 11500, "stock": true, "imagen": "/img/nortonSelectCavernetSauvignon.png" },
+  { "id": 1, "nombre": "Alambrado", "cepa": "Malbec Reserva", "viñedo": "Las Perdices", "precio": 8500, "stock": true, "imagen": "./img/alambradoMalbec.png" },
+  { "id": 2, "nombre": "Norton Select", "cepa": "Cabernet Sauvignon", "viñedo": "Bodega Norton", "precio": 11500, "stock": true, "imagen": "./img/nortonSelectCavernetSauvignon.png" },
   { "id": 3, "nombre": "Paula", "cepa": "Chardonay", "viñedo": "Doña Paula", "precio": 8500, "stock": true, "imagen": "./img/paulaChardonnay.png" },
-  { "id": 4, "nombre": "Emilia", "cepa": "Rosé", "viñedo": "Nieto Senetiner", "precio": 8500, "stock": true, "imagen": "/img/emilia_Rose.png" },
-  { "id": 5, "nombre": "Nieto Senetiner", "cepa": "Pinot Noir", "viñedo": "Nieto Senetiner", "precio": 11500, "stock": true, "imagen": "/img/nietoSenetinerPinotNoir.png" },
-  { "id": 6, "nombre": "Ala Colorada", "cepa": "Cabernet Franc", "viñedo": "Las Perdices", "precio": 11500, "stock": false, "imagen": "/img/alaColoradaCabernetFranc.png" },
-  { "id": 7, "nombre": "Alaris", "cepa": "Cabernet Sauvignon Blanco", "viñedo": "Trapiche", "precio": 10500, "stock": true, "imagen": "/img/alarisCabernetBlanco.png" },
-  { "id": 8, "nombre": "Los Cardps", "cepa": "Cabernet Sauvignon Blanco", "viñedo": "Doña Paula", "precio": 9900, "stock": true, "imagen": "/img/losCardosDoñaPaula.png" }
+  { "id": 4, "nombre": "Emilia", "cepa": "Rosé", "viñedo": "Nieto Senetiner", "precio": 8500, "stock": true, "imagen": "./img/emilia_Rose.png" },
+  { "id": 5, "nombre": "Nieto Senetiner", "cepa": "Pinot Noir", "viñedo": "Nieto Senetiner", "precio": 11500, "stock": true, "imagen": "./img/nietoSenetinerPinotNoir.png" },
+  { "id": 6, "nombre": "Ala Colorada", "cepa": "Cabernet Franc", "viñedo": "Las Perdices", "precio": 11500, "stock": false, "imagen": "./img/alaColoradaCabernetFranc.png" },
+  { "id": 7, "nombre": "Alaris", "cepa": "Cabernet Sauvignon Blanco", "viñedo": "Trapiche", "precio": 10500, "stock": true, "imagen": "./img/alarisCabernetBlanco.png" },
+  { "id": 8, "nombre": "Los Cardps", "cepa": "Cabernet Sauvignon Blanco", "viñedo": "Doña Paula", "precio": 9900, "stock": true, "imagen": "./img/losCardosDoñaPaula.png" }
 ]
